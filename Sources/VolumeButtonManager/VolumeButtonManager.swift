@@ -7,7 +7,7 @@
 
 import MediaPlayer
 
-struct Logger {
+private struct Logger {
 	enum Status: String {
 		case error
 		case info
@@ -26,7 +26,7 @@ struct Logger {
 }
 
 /// Manages the device's volume buttons and updates the app's state accordingly.
-class VolumeButtonManager {
+public class VolumeButtonManager {
 	private var audioSession = AVAudioSession.sharedInstance()
 	private var volumeView = MPVolumeView(frame: CGRectMake(CGFloat(MAXFLOAT), CGFloat(MAXFLOAT), 0, 0))
 	private var volumeObserver: NSKeyValueObservation?
@@ -40,16 +40,20 @@ class VolumeButtonManager {
 
 	private let logger = Logger(system: #file)
 
-	var onAction: (() -> Void)?
+	public var onAction: (() -> Void)?
 
-	init() {
+	public init() {
 		if !hasStarted {
 			start()
 		}
 	}
 
+	deinit {
+		invalidate()
+	}
+
 	/// Starts the volume button manager, setting up observers and audio sessions.
-	func start() {
+	public func start() {
 		if !hasStarted {
 			hasStarted = true
 			invalidate()
@@ -61,7 +65,7 @@ class VolumeButtonManager {
 	}
 
 	/// Stops the volume button manager, removing evertything, from observers to audio sessions.
-	func stop() {
+	public func stop() {
 		if hasStarted {
 			invalidate()
 			hasStarted = false
@@ -215,9 +219,5 @@ class VolumeButtonManager {
 				}
 			}
 		}
-	}
-
-	deinit {
-		invalidate()
 	}
 }
